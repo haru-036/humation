@@ -1,6 +1,6 @@
 {
   "name": "@humation/assets-humation-1",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "description": "Humation 1 avatar manifest and SVG assets.",
   "license": "MIT",
@@ -68,7 +68,7 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "@humation/core": "1.0.1"
+    "@humation/core": "1.0.2"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

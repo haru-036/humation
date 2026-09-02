@@ -1,6 +1,6 @@
 {
   "name": "@humation/core",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "description": "Core Humation avatar manifest and SVG renderer.",
   "license": "MIT",
