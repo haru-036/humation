@@ -1,0 +1,53 @@
+name: Release
+
+# Publishes all public packages to npm with provenance when a version tag is pushed.
+# Authentication uses npm Trusted Publishing (OIDC): no NPM_TOKEN secret is involved.
+# Each package on npmjs.com must list this repository + this workflow file as a trusted publisher.
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      # Trusted publishing needs npm >= 11.5.1
+      - run: npm install -g npm@latest && npm --version
+      - run: bun install --frozen-lockfile
+      - run: bun run typecheck
+      - run: bun run test
+      - run: bun run pack:smoke
+      - name: Check that the tag matches every package version
+        run: |
+          v="${GITHUB_REF_NAME#v}"
+          for p in core assets-humation-1 react web-component; do
+            pv=$(node -p "require('./packages/$p/package.json').version")
+            if [ "$pv" != "$v" ]; then
+              echo "packages/$p is $pv but the tag is $v" >&2
+              exit 1
+            fi
+          done
+      - name: Publish with provenance
+        # Publish from a tarball (not the directory) so npm reads the package README
+        # into the registry metadata; see scripts/publish-packages.mjs.
+        run: |
+          for p in core assets-humation-1 react web-component; do
+            (
+              cd "packages/$p"
+              tgz=$(npm pack | tail -n 1)
+              npm publish "$tgz" --provenance --access public --tag latest
+              rm -f "$tgz"
+            )
+          done
