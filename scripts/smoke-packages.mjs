@@ -184,7 +184,9 @@ function packPackage(packagePath) {
     { cwd: join(repoRoot, packagePath), capture: true }
   );
   const parsed = JSON.parse(result.stdout);
-  const filename = parsed[0]?.filename;
+  // npm <=11 returns an array; npm 12+ returns an object keyed by package name
+  const entry = Array.isArray(parsed) ? parsed[0] : Object.values(parsed ?? {})[0];
+  const filename = entry?.filename;
   if (!filename) {
     throw new Error(`npm pack did not return a filename for ${packagePath}`);
   }
