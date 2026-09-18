@@ -23,6 +23,15 @@ When changing assets, update the raw SVG files, `manifest.json`, and generated
 guards their internal consistency (manifest validity, part counts, and that
 every `svgPath` resolves to a real file).
 
+### Asset authoring rules
+
+- Outline strokes use `stroke="var(--hm-stroke, #000000)"` at an effective
+  width of 1.5 units (`stroke-width` × any internal scale).
+- Do not use `<style>` or `class`. Set presentation on attributes instead:
+  class rules leak when SVGs are inlined together.
+- Fill-drawn outlines must be listed in `FILL_OUTLINE_PARTS` in
+  `src/assets.test.ts` and checked visually (target 1.5).
+
 Renderer code in `packages/core` is normal hand-written source and welcomes
 direct changes.
 
