@@ -1919,7 +1919,7 @@ export const manifest: HumationManifest = {
         {
           "layerSlot": "glasses",
           "svgPath": "assets/humation-1/glasses/001.svg",
-          "svg": "<svg width=\"80\" height=\"80\" viewBox=\"0 0 80 80\" xmlns=\"http://www.w3.org/2000/svg\">\n  <g transform=\"scale(0.06667)\">\n    <circle cx=\"403.04\" cy=\"554.18\" r=\"52.35\" fill=\"#FFFFFF\" stroke=\"var(--hm-stroke, #000000)\" stroke-width=\"25.51\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <circle cx=\"540.65\" cy=\"562.65\" r=\"52.35\" fill=\"#FFFFFF\" stroke=\"var(--hm-stroke, #000000)\" stroke-width=\"25.51\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M456.45,560.76s13.46,7.62,31.5,1.23\" fill=\"none\" stroke=\"var(--hm-stroke, #000000)\" stroke-width=\"25.51\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>\n"
+          "svg": "<svg width=\"80\" height=\"80\" viewBox=\"0 0 80 80\" xmlns=\"http://www.w3.org/2000/svg\">\n  <g transform=\"scale(0.06667)\">\n    <circle cx=\"403.04\" cy=\"554.18\" r=\"52.35\" fill=\"#FFFFFF\" stroke=\"var(--hm-stroke, #000000)\" stroke-width=\"22.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <circle cx=\"540.65\" cy=\"562.65\" r=\"52.35\" fill=\"#FFFFFF\" stroke=\"var(--hm-stroke, #000000)\" stroke-width=\"22.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M456.45,560.76s13.46,7.62,31.5,1.23\" fill=\"none\" stroke=\"var(--hm-stroke, #000000)\" stroke-width=\"22.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>\n"
         }
       ]
     },
