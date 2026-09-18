@@ -1,6 +1,6 @@
 {
   "name": "@humation/web-component",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "description": "<humation-avatar> custom element for Humation avatars.",
   "license": "MIT",
@@ -52,10 +52,10 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "@humation/core": "1.0.2"
+    "@humation/core": "1.0.3"
   },
   "devDependencies": {
-    "@humation/assets-humation-1": "1.0.2",
+    "@humation/assets-humation-1": "1.0.3",
     "typescript": "^5.0.0"
   }
 }
