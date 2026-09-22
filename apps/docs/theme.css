@@ -38,9 +38,14 @@ body {
   border-radius: 0.75rem;
 }
 
+/* MDX は画像を <p> で包むので、img だけ margin を落としても包みの上下 margin が
+   枠の内側に残る。overflow: hidden で相殺も起きない。両方から落とす。 */
+.prose .humation-hero :is(p, img) {
+  margin: 0;
+}
+
 .prose .humation-hero img {
   display: block;
-  margin: 0;
 }
 
 /* Shiki の二色トークンは .prose のコードブロック規則が解決している。
