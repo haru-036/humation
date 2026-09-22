@@ -8,8 +8,6 @@ export default defineConfig({
   content: { root: "content" },
   logo: {
     image: "/icon_humation.png",
-    // サブドメインに分けたので、ヘッダーのブランド名は "Docs" を付けない。
-    text: "Humation",
   },
   // 「Edit on GitHub」のリンク元。OSS リポの docs/ は内部設計文書が使っているので、
   // ドキュメント本体の置き場所である apps/docs/ を指す。

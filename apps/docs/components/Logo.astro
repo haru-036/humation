@@ -1,11 +1,9 @@
 ---
 import { withBase } from "blume/components/islands/base-path.ts";
 
-import { existsSync, readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-
-// 組み込みの Logo に、旧サイトのヘッダーが持っていた SDK バージョンのバッジを足す。
-// バッジはリンクの外に置く (ブランドのリンク領域を広げないため)。
+// humation-app のヘッダーと合わせて、アイコン + ワードマーク画像の構成にする
+// (テキストのブランド名は使わない)。ワードマークは黒固定の線画なので、
+// ダークだけ白版に差し替える (humation-app 側は未対応だが、docs はダークがあるので必要)。
 // GitHub マークは navigation.repo が header 側で描くので、ここでは扱わない。
 interface Props {
   site: { title: string };
@@ -19,52 +17,39 @@ interface Props {
   } | null;
 }
 
-const { site, logo } = Astro.props;
+const { logo } = Astro.props;
 
-const image = logo?.light;
+const icon = logo?.light;
 const brandHref = logo?.href ?? "/";
-const brandText = logo?.text ?? site.title;
-
-// バージョンはドキュメントが書かれている対象そのものなので手で持たない。
-// 依存の宣言は workspace:* でバージョンではないため、パッケージ本体から読む。
-// import.meta.url は .blume/ の生成プロジェクトを、モジュール解決は
-// プリレンダのスタブを指すので、どちらも使わず cwd から上に探す。
-const readSdkVersion = () => {
-  let dir = process.cwd();
-  for (let i = 0; i < 4; i++) {
-    const candidate = join(dir, "packages/react/package.json");
-    if (existsSync(candidate)) {
-      return JSON.parse(readFileSync(candidate, "utf8")).version as string;
-    }
-    dir = dirname(dir);
-  }
-  return "";
-};
-
-const version = readSdkVersion();
 ---
 
-<span class="flex min-w-0 items-center gap-2.5">
-  <a
-    class="inline-flex min-w-0 items-center gap-2 font-semibold text-base text-foreground"
-    href={withBase(brandHref)}
-  >
-    {
-      image && (
-        <img
-          alt={logo?.alt ?? ""}
-          class="h-5 w-auto shrink-0"
-          height="20"
-          src={withBase(image)}
-          width="20"
-        />
-      )
-    }
-    {brandText && <span class="truncate">{brandText}</span>}
-  </a>
-  <span
-    class="shrink-0 rounded-full border border-border px-2 py-0.5 font-mono text-[11px] text-muted-foreground"
-  >
-    v{version}
-  </span>
-</span>
+<a
+  class="inline-flex min-w-0 items-center gap-3 font-semibold text-base text-foreground"
+  href={withBase(brandHref)}
+>
+  {
+    icon && (
+      <img
+        alt={logo?.alt ?? ""}
+        class="h-5 w-auto shrink-0"
+        height="20"
+        src={withBase(icon)}
+        width="20"
+      />
+    )
+  }
+  <img
+    alt="Humation"
+    class="h-4 w-auto shrink-0 dark:hidden"
+    height="16"
+    src={withBase("/logo_humation.svg")}
+    width="102"
+  />
+  <img
+    alt="Humation"
+    class="hidden h-4 w-auto shrink-0 dark:block"
+    height="16"
+    src={withBase("/logo_humation_dk.svg")}
+    width="102"
+  />
+</a>
