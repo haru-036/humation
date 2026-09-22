@@ -1,0 +1,40 @@
+---
+title: Core
+description: "@humation/core renders avatars to SVG without React. Use it in Node, Cloudflare Workers, export jobs, tests, or a framework of your own."
+---
+
+<HumationInstall
+  packages={["@humation/core", "@humation/assets-humation-1"]}
+/>
+
+## createAvatar
+
+`createAvatar` takes a manifest and the same options the React component accepts, and returns an object you can convert into the shape you need.
+
+```ts
+import { createAvatar } from '@humation/core';
+import { humation1 } from '@humation/assets-humation-1';
+
+const avatar = createAvatar(humation1, {
+  seed: 'felix',
+  colors: { hair: '#123456', skin: '#FFEECC' }
+});
+
+avatar.toString(); // '<svg ...>...</svg>'
+avatar.toDataUri(); // 'data:image/svg+xml;charset=utf-8,...'
+avatar.toJSON(); // resolved selections, colors, background, crop
+```
+
+`toJSON()` is the useful one when a seed produced the avatar and you want to store what it actually resolved to. See [Saving state](/state).
+
+## Wrapping core in your own component
+
+If you are building a framework wrapper, `toRenderData()` gives you the composed fragments without the root `<svg>` element, background rect, or inline color style. Colors stay as `var(--hm-*, fallback)` references, so your wrapper can drive them through CSS custom properties without re-rendering the content.
+
+```ts
+const { viewBox, background, colors, content } = createAvatar(humation1, {
+  seed: 'felix'
+}).toRenderData();
+```
+
+This is exactly what `@humation/react` does internally.

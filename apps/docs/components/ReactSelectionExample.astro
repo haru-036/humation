@@ -1,0 +1,22 @@
+---
+import AvatarPreview from "./AvatarPreview.astro";
+import Example from "./Example.astro";
+
+const code = `<Avatar
+  assets={humation1}
+  selections={{ head: 'braids', body: 'hoodie', item: 'calico-cat' }}
+  colors={{ hair: '#4A3728', skin: '#F4C9A8' }}
+  size={128}
+/>`;
+---
+
+<Example code={code}>
+  <div class="flex justify-center">
+    <AvatarPreview
+      selections={{ head: "braids", body: "hoodie", item: "calico-cat" }}
+      colors={{ hair: "#4A3728", skin: "#F4C9A8" }}
+      size={128}
+      alt="Avatar with braids, a hoodie and a calico cat"
+    />
+  </div>
+</Example>

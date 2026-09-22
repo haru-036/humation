@@ -1,0 +1,35 @@
+---
+import AvatarPreview from "./AvatarPreview.astro";
+import Example from "./Example.astro";
+
+const SEEDS = ["felix", "ayaka", "user_10482", "orange", "a1b2c3"];
+
+const code = `import { Avatar } from '@humation/react';
+import { humation1 } from '@humation/assets-humation-1';
+
+export function UserAvatar({ user }: { user: { id: string; name: string } }) {
+  return (
+    <Avatar
+      assets={humation1}
+      seed={user.id}
+      size={96}
+      title={user.name}
+    />
+  );
+}`;
+---
+
+<Example code={code} title="UserAvatar.tsx">
+  <div class="flex flex-wrap justify-center gap-4">
+    {
+      SEEDS.map((seed) => (
+        <div class="text-center">
+          <AvatarPreview seed={seed} size={72} alt={`Avatar for ${seed}`} />
+          <p class="mt-1.5 font-mono text-[11px] text-muted-foreground">
+            {seed}
+          </p>
+        </div>
+      ))
+    }
+  </div>
+</Example>

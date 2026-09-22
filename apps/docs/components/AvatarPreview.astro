@@ -1,0 +1,41 @@
+---
+import { humation1 } from "@humation/assets-humation-1";
+import { createAvatar } from "@humation/core";
+
+// プレビューは画像を置くのではなく @humation/core で実際に描く。
+// 入力は固定なのでビルド時に描き切り、ブラウザには <img> だけ届く。
+interface Props {
+  seed?: string;
+  selections?: Record<string, string>;
+  colors?: Record<string, string>;
+  background?: string;
+  size?: number;
+  alt?: string;
+}
+
+const {
+  seed,
+  selections,
+  colors,
+  background,
+  size = 96,
+  alt = "",
+} = Astro.props;
+
+const src = createAvatar(humation1, {
+  seed,
+  selections,
+  colors,
+  background,
+}).toDataUri();
+---
+
+<img
+  src={src}
+  alt={alt}
+  width={size}
+  height={size}
+  data-no-zoom
+  class="rounded-md"
+  style={`width:${size}px;height:${size}px`}
+/>

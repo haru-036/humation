@@ -1,0 +1,31 @@
+---
+import data from "blume:data";
+import CodeGroup from "blume/components/content/CodeGroup.astro";
+import { highlightCode } from "blume/markdown";
+
+interface Props {
+  packages: string[];
+}
+
+const { packages } = Astro.props;
+const packageList = packages.join(" ");
+const commands = [
+  ["bun", `bun add ${packageList}`],
+  ["pnpm", `pnpm add ${packageList}`],
+  ["npm", `npm install ${packageList}`],
+  ["yarn", `yarn add ${packageList}`],
+] as const;
+
+const blocks = await Promise.all(
+  commands.map(async ([manager, command]) =>
+    highlightCode(command, "bash", {
+      themes: data.config.codeThemes,
+      title: manager,
+    })
+  )
+);
+---
+
+<CodeGroup>
+  {blocks.map((html) => <Fragment set:html={html} />)}
+</CodeGroup>
