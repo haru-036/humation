@@ -32,6 +32,9 @@ export default defineConfig({
       // カードは上の logo.image を見ず、SVG を 1 枚だけ受け取る (未設定だと "H" タイル)。
       // ヘッダーと同じアイコン + ワードマークを 1 枚に合成したものがこれ。
       logo: "/logo_humation_og.svg",
+      // カードの組み込みフォントは Latin のみで、ja のタイトルが豆腐になる。
+      // theme.css はシステムフォント指定なのでカード側から引けず、ここで名指しする。
+      fonts: ["Inter", "Noto Sans JP"],
     },
   },
   i18n: {
