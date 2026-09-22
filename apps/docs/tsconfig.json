@@ -1,0 +1,6 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "files": [".blume/.astro/types.d.ts"],
+  "include": ["**/*"],
+  "exclude": ["dist", ".blume"]
+}
