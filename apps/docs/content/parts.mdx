@@ -7,6 +7,14 @@ description: Every part in the Humation 1 asset package. Click one to copy its n
 
 <PartsBrowser />
 
+## Listing part names from the CLI
+
+Use this to discover names for selections, docs, tests, and prompts.
+
+```sh
+node -e "import('@humation/assets-humation-1').then(({ humation1 }) => console.log(humation1.parts.map((p) => p.name)))"
+```
+
 ## Using a name
 
 Names are unique within a slot, so pass them scoped to the slot they belong to. Click a part above to copy its name.
