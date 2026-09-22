@@ -1,0 +1,33 @@
+---
+import data from "blume:data";
+import { highlightCode } from "blume/markdown";
+
+import SeedDemoClient from "./SeedDemoClient";
+
+// seed だけが可変なので、プレースホルダ入りの一行をサーバで Shiki に通す。
+// 渡すのは <code> の中身だけ。<pre> ごと出すとコードブロックの体裁になり、
+// このデモが元から持っている「カード下端のコード帯」の見た目が変わる。
+const PLACEHOLDER = "HUMATION_SEED_SLOT";
+const DEFAULT_SEED = "felix";
+
+const highlighted = await highlightCode(
+  `<Avatar assets={humation1} seed="${PLACEHOLDER}" size={112} />`,
+  "tsx",
+  { themes: data.config.codeThemes },
+);
+
+const inner = /<code[^>]*>([\s\S]*)<\/code>/u.exec(highlighted)?.[1] ?? "";
+
+// スロットの中身はサーバでも既定の seed で埋めておく。island が水和する前に
+// seed="" が見えるのを防ぐ。
+const codeInner = inner.replace(
+  PLACEHOLDER,
+  `<span data-seed>${DEFAULT_SEED}</span>`,
+);
+---
+
+<SeedDemoClient
+  client:visible
+  codeInner={codeInner}
+  defaultSeed={DEFAULT_SEED}
+/>

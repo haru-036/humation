@@ -1,0 +1,42 @@
+---
+title: React
+description: "The Avatar component renders an <svg> element directly. It is the shortest path for product UI."
+---
+
+## Render from a seed
+
+Pass any stable string — a user id, an email, a username. The same seed picks the same parts every time for a given asset package version.
+
+<ReactSeedExample />
+
+## Render from explicit selections
+
+When the user picks their own avatar, pass `selections` and `colors` instead of a seed. Part names, aliases, and canonical IDs are all accepted.
+
+<ReactSelectionExample />
+
+Names are listed on [Parts](/parts). Combining a seed with selections is fine: the seed fills every slot, and explicit selections override the ones you name.
+
+## Colors are CSS custom properties
+
+The `colors` prop is applied as CSS custom properties on the `<svg>` element, so changing a color never re-renders the avatar content. Slots you leave out keep the defaults baked into the assets and stay themeable from your own CSS.
+
+```css
+.avatar-on-dark {
+  --hm-stroke: #ffffff;
+  --hm-background: transparent;
+}
+```
+
+## Accessibility
+
+Pass `title` when the avatar identifies someone. Without it the avatar is treated as decorative and hidden from screen readers, which is the right default next to a visible name.
+
+```tsx
+<Avatar assets={humation1} seed={user.id} title={user.name} />
+
+<span aria-hidden="true"><Avatar assets={humation1} seed={user.id} /></span>
+<span>{user.name}</span>
+```
+
+Every remaining SVG prop is forwarded to the root element, so `className`, `style`, `onClick`, and `ref` work as usual. The full list is in [Options](/options).

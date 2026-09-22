@@ -1,0 +1,36 @@
+---
+title: For LLMs
+description: Humation is small enough for a coding agent to use correctly from a short brief. This page is that brief.
+---
+
+## llms.txt
+
+A machine-readable summary of the packages, the quick start, and the rules below lives at [/llms.txt](/llms.txt). Point an agent at that URL rather than pasting code samples.
+
+## Rules worth stating explicitly
+
+These are the points agents most often get wrong when they assume Humation works like a hosted avatar service.
+
+```text
+Use @humation/react for React UI.
+Use @humation/assets-humation-1 for the asset set. It is always required.
+Do not call a Humation API or any remote URL for rendering.
+Use seed for deterministic generated avatars.
+Use selections and colors for user-customized avatars.
+Use @humation/core only when raw SVG output or picker previews are needed.
+Part names are scoped to a slot: { head: 'braids' }, not { part: 'braids' }.
+Empty slots are the part named 'none', not undefined.
+```
+
+## Minimal correct example
+
+If an agent produces only this much, it is already correct. Everything else is refinement.
+
+```tsx
+import { Avatar } from '@humation/react';
+import { humation1 } from '@humation/assets-humation-1';
+
+<Avatar assets={humation1} seed={user.id} size={96} title={user.name} />;
+```
+
+The full surface is on [Options](/options), and every part name is on [Parts](/parts). Both pages are short enough to paste into a prompt whole. For stored data, remind the agent to use canonical IDs such as `hm1-p-000020`.

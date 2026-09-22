@@ -1,0 +1,59 @@
+---
+import AvatarPreview from "./AvatarPreview.astro";
+
+const COLOR_SLOTS = [
+  { id: "background", variable: "--hm-background", value: "#F6F5F4" },
+  { id: "stroke", variable: "--hm-stroke", value: "#000000" },
+  { id: "hair", variable: "--hm-hair", value: "#000000" },
+  { id: "skin", variable: "--hm-skin", value: "#FFFFFF" },
+  { id: "clothes", variable: "--hm-clothes", value: "#FFFFFF" },
+  { id: "bottom", variable: "--hm-bottom", value: "#000000" },
+];
+
+const PALETTES = [
+  { hair: "#4A3728", skin: "#F4C9A8", clothes: "#E8D5C4" },
+  { hair: "#1B3A5C", skin: "#FFE0C4", clothes: "#7FB2D9" },
+  { hair: "#7B2D26", skin: "#F0C8A0", clothes: "#F2E8DC" },
+  { hair: "#2F4F3E", skin: "#E8B894", clothes: "#C9D6C4" },
+];
+---
+
+<div class="not-prose mt-6 overflow-hidden rounded-blume border border-border">
+  <table class="w-full text-left text-[13px]">
+    <thead class="bg-muted text-muted-foreground">
+      <tr>
+        <th class="px-4 py-2 font-medium">Slot</th>
+        <th class="px-4 py-2 font-medium">CSS variable</th>
+        <th class="px-4 py-2 font-medium">Default</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-border">
+      {
+        COLOR_SLOTS.map((slot) => (
+          <tr>
+            <td class="px-4 py-2 font-mono">{slot.id}</td>
+            <td class="px-4 py-2 font-mono text-accent">{slot.variable}</td>
+            <td class="px-4 py-2">
+              <span class="inline-flex items-center gap-2 font-mono text-muted-foreground">
+                <span
+                  aria-hidden="true"
+                  class="inline-block h-3 w-3 rounded-sm border border-border"
+                  style={`background:${slot.value}`}
+                />
+                {slot.value}
+              </span>
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<div class="not-prose mt-6 flex flex-wrap gap-3">
+  {
+    PALETTES.map((colors) => (
+      <AvatarPreview seed="felix" colors={colors} size={80} alt="" />
+    ))
+  }
+</div>

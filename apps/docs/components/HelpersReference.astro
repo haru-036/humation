@@ -1,0 +1,40 @@
+---
+import TypeTable from "blume/components/content/TypeTable.astro";
+
+// 関数なので `?` が付かないよう required: true。type は返り値。
+---
+
+<TypeTable
+  type={{
+    "resolvePartId(input, manifest, slotId?)": {
+      type: "string",
+      required: true,
+      description:
+        "Resolves a name, alias, or ID to a canonical part ID. Pass slotId to scope a bare name to one slot.",
+    },
+    "getPartsForSlot(manifest, slotId)": {
+      type: "PartOption[]",
+      required: true,
+      description:
+        "Every part in a selection slot (head, body, bottom, item, glasses).",
+    },
+    "getPartsForUiGroup(manifest, groupId)": {
+      type: "PartOption[]",
+      required: true,
+      description:
+        "Every part in a UI group. Groups are what a picker renders as tabs.",
+    },
+    "createPartPreview(manifest, part, options?)": {
+      type: "{ toString, toDataUri }",
+      required: true,
+      description:
+        "A single-part preview for picker swatches. Options accept colors and background.",
+    },
+    "validateManifest(manifest)": {
+      type: "ManifestValidationIssue[]",
+      required: true,
+      description:
+        "Checks a manifest for structural problems. Useful when authoring a custom asset package.",
+    },
+  }}
+/>

@@ -1,0 +1,57 @@
+---
+import TypeTable from "blume/components/content/TypeTable.astro";
+
+// TypeTable は required でない項目の名前に `?` を付ける。
+// props はそれが正しいので、assets だけ required: true。
+---
+
+<TypeTable
+  type={{
+    assets: {
+      type: "HumationManifest",
+      required: true,
+      description:
+        "The asset set to draw with, e.g. humation1 from @humation/assets-humation-1.",
+    },
+    seed: {
+      type: "string",
+      description:
+        "Picks a part for every slot deterministically. Explicit selections override the seeded picks.",
+    },
+    selections: {
+      type: "Record<string, string>",
+      description:
+        "Part selections by name, alias, or canonical ID, e.g. { head: 'braids' }.",
+    },
+    colors: {
+      type: "Record<string, string>",
+      description:
+        "Color slot values. Applied as CSS custom properties on the <svg> element, so a color change never re-renders the content.",
+    },
+    background: {
+      type: "string | 'transparent'",
+      default: "'#F6F5F4'",
+      description: "Background fill. Defaults to the manifest default.",
+    },
+    crop: {
+      type: "string",
+      default: "'avatar'",
+      description: "Crop id. Humation 1 ships a single crop.",
+    },
+    size: {
+      type: "number | string",
+      description: "Rendered size. Numbers keep the crop aspect ratio.",
+    },
+    title: {
+      type: "string",
+      description:
+        "Accessible title. Without it the avatar is treated as decorative.",
+    },
+    "...svgProps": {
+      type: "Omit<SVGProps<SVGSVGElement>, 'children'>",
+      required: true,
+      description:
+        "Everything else is forwarded to the root <svg>, including className, style, and ref.",
+    },
+  }}
+/>

@@ -1,0 +1,25 @@
+---
+import CodeBlock from "blume/components/content/CodeBlock.astro";
+
+// 実行結果とソースを 1 つの枠に入れて、対応関係を見た目で保証する。
+// 内側のコードブロックは枠と角丸を落として、境界を 1 本だけにする
+// (打ち消しは theme.css の .humation-example 側)。
+interface Props {
+  code: string;
+  lang?: string;
+  title?: string;
+}
+
+const { code, lang = "tsx", title } = Astro.props;
+---
+
+<div
+  class="humation-example my-6 overflow-hidden rounded-blume border border-border"
+>
+  {/* not-prose はプレビュー側だけ。枠ごと囲うと中のコードブロックが
+      .prose のヘッダー (ファイル名バー) を失う。 */}
+  <div class="not-prose bg-(--humation-card) p-5"><slot /></div>
+  <div class="border-border border-t">
+    <CodeBlock code={code} lang={lang} title={title} />
+  </div>
+</div>

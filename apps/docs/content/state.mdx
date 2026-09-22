@@ -1,0 +1,31 @@
+---
+title: Saving state
+description: What to persist when a user edits their avatar.
+---
+
+## The shape to store
+
+Save explicit selections and colors when the user edits an avatar. Save a seed when the avatar can be regenerated from user identity.
+
+```ts
+type HumationAvatarState = {
+  seed?: string;
+  selections?: {
+    head?: string;
+    body?: string;
+    bottom?: string;
+    item?: string;
+    glasses?: string;
+  };
+  colors?: {
+    hair?: string;
+    clothes?: string;
+    bottom?: string;
+    skin?: string;
+    stroke?: string;
+    background?: string;
+  };
+};
+```
+
+For long-lived saved data, canonical IDs such as `hm1-p-000020` are the most stable. Human-readable names such as `braids` are convenient for code and prompts.

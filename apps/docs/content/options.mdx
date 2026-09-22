@@ -1,0 +1,80 @@
+---
+title: Options
+description: Everything you can pass to the React component and to createAvatar, with the helpers and types that support them.
+---
+
+## `<Avatar>`
+
+`@humation/react` — a forwardRef component that renders an `<svg>` element.
+
+<AvatarOptionsReference />
+
+## createAvatar
+
+`@humation/core`
+
+```ts
+createAvatar(manifest: HumationManifest, options?: CreateAvatarOptions)
+```
+
+<CreateAvatarOptionsReference />
+
+The returned object exposes four conversions.
+
+## Helpers
+
+`@humation/core`
+
+<HelpersReference />
+
+## Manifest types
+
+The manifest is plain data, so you can read it directly instead of hard-coding slot names or color lists.
+
+```ts
+type HumationManifest = {
+  schemaVersion: '1.0';
+  template: { id: string; shortId: string; name: string; version: string; license: string };
+  defaults: {
+    selections: Record<SelectionSlotId, PartOptionId>;
+    colors: Record<ColorSlotId, HexColor>;
+    background: HexColor | 'transparent';
+    crop: CropId;
+  };
+  colors: ColorSlot[];
+  crops: Record<CropId, ViewBox>;
+  selectionSlots: SelectionSlot[];
+  uiGroups: UiGroup[];
+  layerSlots: LayerSlot[];
+  parts: PartOption[];
+  aliases: AliasEntry[];
+};
+
+type PartOption = {
+  id: PartOptionId;
+  name?: string;
+  aliases?: string[];
+  selectionSlot: SelectionSlotId;
+  uiGroups: UiGroupId[];
+  layers: LayerFragment[];
+  tags?: string[];
+  deprecated?: boolean;
+};
+
+type ColorSlot = {
+  id: ColorSlotId;
+  label: string;
+  default: HexColor;
+  cssVariable: `--hm-${string}`;
+  allowTransparent?: boolean;
+};
+
+type AliasEntry = {
+  alias: string;
+  targetId: PartOptionId;
+  status: 'active' | 'deprecated';
+  replacementAlias?: string;
+};
+```
+
+`aliases` is what keeps old stored values working. A deprecated entry carries `replacementAlias` pointing at its successor. See [Saving state](/state).

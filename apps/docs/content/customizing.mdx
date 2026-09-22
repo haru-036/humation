@@ -1,0 +1,40 @@
+---
+title: Customizing
+description: How part selections resolve, which colors are recolorable, and how to build a picker UI on top of the manifest.
+---
+
+## Selections
+
+There are five selection slots: `head`, `body`, `bottom`, `item`, and `glasses`. Each holds exactly one part. A value can be written three ways, and they all resolve to the same part.
+
+```ts
+{
+  head: 'braids';
+} // name, scoped to the slot
+{
+  head: 'head-braids';
+} // global alias
+{
+  head: 'hm1-p-000020';
+} // canonical part ID
+```
+
+Names read well in code and in prompts. Canonical IDs are the stable choice for anything you store — see [Saving state](/state). Browse every name on [Parts](/parts).
+
+`item` and `glasses` both include a part named `none`. Select it when the avatar should carry nothing.
+
+## Colors
+
+Six color slots are recolorable. Regions that do not reference a slot are fixed by construction, so accessories keep their own palette and only bind their outlines to `stroke`.
+
+<ColorSlotsReference />
+
+`background` also accepts `'transparent'`. Hex values are accepted with or without a leading `#`.
+
+## Build a picker from the manifest
+
+The manifest already lists the parts in each UI group and can render a preview for each one. Map over that data to build a picker without maintaining a separate part list or thumbnail set.
+
+<PickerGuideExample />
+
+See the <a href="https://humation.app/avatar" target="_blank" rel="noopener noreferrer">avatar builder</a> for a complete multi-group implementation.

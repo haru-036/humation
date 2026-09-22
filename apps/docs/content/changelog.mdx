@@ -1,0 +1,79 @@
+---
+title: Changelog
+description: What changed in each stable Humation release, including upgrade notes for the packages and artwork.
+---
+
+Humation packages are released together. Install the same version of
+`@humation/core`, `@humation/assets-humation-1`, `@humation/react`, and
+`@humation/web-component` whenever you use more than one of them.
+
+## 1.0.3 — September 18, 2026
+
+### Improved
+
+- Refined 23 illustrations in the Humation 1 asset set, including the two cat
+  variants, round glasses, and 20 handheld items.
+- Kept part names, canonical IDs, selection slots, and the manifest shape
+  unchanged. Stored avatar selections continue to resolve to the same parts.
+
+This is an artwork-only update. There are no API changes or required code
+changes, but seed-based avatars that select one of the updated parts will use
+the refined drawing after upgrading.
+
+## 1.0.2 — September 2, 2026
+
+### Changed
+
+- Moved package repository, homepage, issue, and README links from the original
+  maintainer account to the
+  [Humation organization](https://github.com/humation-labs/humation).
+
+There are no runtime or artwork changes in this release.
+
+## 1.0.1 — June 22, 2026
+
+### Added
+
+- Published `@humation/web-component`, providing the `<humation-avatar>` custom
+  element for applications that do not use React.
+- Added stable `data-hm-*` attributes to rendered SVG layer groups so tools can
+  identify layer slots, selected parts, and their original source metadata.
+- Added the Humation agent skill for coding agents that support Skills.sh.
+
+### Fixed
+
+- Corrected the Humation 1 manifest metadata to identify the asset set as MIT
+  licensed and versioned for the stable release.
+
+The previous `data-group-id` and `data-part-id` output attributes were replaced
+by the documented `data-hm-*` attributes. This only affects code that inspects
+the generated SVG markup directly.
+
+## 1.0.0 — June 21, 2026
+
+The first stable Humation release.
+
+### Added
+
+- `@humation/core` with deterministic seed-based avatar generation, explicit
+  part selections, CSS-variable colors, manifest validation, and UI helpers.
+- `@humation/assets-humation-1` with 86 hand-drawn SVG parts and embedded,
+  manifest, and JSON exports.
+- `@humation/react` with the `<Avatar>` component.
+- Stable human-readable part names and canonical IDs for persisted selections.
+- MIT licensing for both the source code and the official artwork.
+
+## Upgrade
+
+Update the packages you use to the same version:
+
+```sh
+npm install @humation/core@latest \
+  @humation/assets-humation-1@latest \
+  @humation/react@latest \
+  @humation/web-component@latest
+```
+
+You only need to include the framework package your app uses. For example, a
+React app does not need `@humation/web-component`.
+

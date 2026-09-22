@@ -1,0 +1,59 @@
+---
+import TypeTable from "blume/components/content/TypeTable.astro";
+
+// 返り値の 4 つは省略可能な引数ではないので、`?` が付かないよう required: true。
+---
+
+<TypeTable
+  type={{
+    seed: {
+      type: "string",
+      description:
+        "Deterministic picks per slot. Stable per asset package version; adding parts to a slot can change a pick.",
+    },
+    selections: {
+      type: "Record<SelectionSlotId, string>",
+      description:
+        "Canonical part IDs, global aliases, or slot-scoped names. Overrides seeded picks.",
+    },
+    colors: {
+      type: "Record<ColorSlotId, HexColor>",
+      description: "Hex values, with or without a leading #.",
+    },
+    background: {
+      type: "HexColor | 'transparent'",
+      description: "Overrides the manifest default background.",
+    },
+    crop: {
+      type: "CropId",
+      description: "Overrides the manifest default crop.",
+    },
+  }}
+/>
+
+<TypeTable
+  type={{
+    "toString()": {
+      type: "string",
+      required: true,
+      description: "A complete SVG document.",
+    },
+    "toDataUri()": {
+      type: "string",
+      required: true,
+      description: "A data:image/svg+xml URI, ready for an <img src>.",
+    },
+    "toJSON()": {
+      type: "AvatarJson",
+      required: true,
+      description:
+        "The resolved selections, colors, background, and crop, with every part as a canonical ID.",
+    },
+    "toRenderData()": {
+      type: "AvatarRenderData",
+      required: true,
+      description:
+        "Composed fragments without the root element, for framework wrappers that build the <svg> themselves.",
+    },
+  }}
+/>
