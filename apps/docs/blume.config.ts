@@ -27,6 +27,13 @@ export default defineConfig({
   // wrangler で Workers に直接出す構成では環境変数が来ないので明示する。
   // 未設定だと sitemap.xml / robots.txt / llms.txt が黙って生成されない。
   deployment: { site: "https://docs.humation.app" },
+  seo: {
+    og: {
+      // カードは上の logo.image を見ず、SVG を 1 枚だけ受け取る (未設定だと "H" タイル)。
+      // ヘッダーと同じアイコン + ワードマークを 1 枚に合成したものがこれ。
+      logo: "/logo_humation_og.svg",
+    },
+  },
   i18n: {
     defaultLocale: "en",
     locales: [
