@@ -15,17 +15,19 @@ type Entry = {
 // 全パーツ分のプレビューをここで生成する。props で渡すと SSR 済みの
 // マークアップと island の props JSON に二重に載ってしまう。
 function buildEntries(): Entry[] {
-  return humation1.parts
-    .filter((part) => SLOTS.includes(part.selectionSlot as Slot))
-    // `none` は「何も着けない」を表す空のパーツで、プレビューが白紙になる。
-    // 選び方は本文の Empty slots で説明しているので一覧には出さない。
-    .filter((part) => (part.name ?? part.id) !== "none")
-    .map((part) => ({
-      id: part.id,
-      name: part.name ?? part.id,
-      slot: part.selectionSlot,
-      previewSrc: createPartPreview(humation1, part).toDataUri(),
-    }));
+  return (
+    humation1.parts
+      .filter((part) => SLOTS.includes(part.selectionSlot as Slot))
+      // `none` は「何も着けない」を表す空のパーツで、プレビューが白紙になる。
+      // 選び方は本文の Empty slots で説明しているので一覧には出さない。
+      .filter((part) => (part.name ?? part.id) !== "none")
+      .map((part) => ({
+        id: part.id,
+        name: part.name ?? part.id,
+        slot: part.selectionSlot,
+        previewSrc: createPartPreview(humation1, part).toDataUri(),
+      }))
+  );
 }
 
 export default function PartsBrowser() {
@@ -37,7 +39,7 @@ export default function PartsBrowser() {
   const visible = entries.filter(
     (entry) =>
       (slot === "all" || entry.slot === slot) &&
-      (query === "" || entry.name.includes(query.trim().toLowerCase()))
+      (query === "" || entry.name.includes(query.trim().toLowerCase())),
   );
 
   async function copyName(entry: Entry) {
@@ -59,7 +61,7 @@ export default function PartsBrowser() {
           placeholder="Search parts"
           spellCheck={false}
           aria-label="Search parts"
-          className="min-w-40 flex-1 rounded-md border border-[var(--blume-border)] bg-[var(--blume-background)] px-3 py-1.5 text-sm outline-none focus:border-[var(--blume-muted-foreground)]"
+          className="border-border bg-background focus:border-muted-foreground min-w-40 flex-1 rounded-md border px-3 py-1.5 text-sm outline-none"
         />
         <div className="flex flex-wrap gap-1">
           {(["all", ...SLOTS] as const).map((item) => (
@@ -70,8 +72,8 @@ export default function PartsBrowser() {
               aria-pressed={item === slot}
               className={
                 item === slot
-                  ? "rounded-md bg-[var(--blume-muted)] px-2.5 py-1.5 font-mono text-[12px] font-medium text-[var(--blume-foreground)]"
-                  : "rounded-md px-2.5 py-1.5 font-mono text-[12px] text-[var(--blume-muted-foreground)] transition hover:text-[var(--blume-foreground)]"
+                  ? "bg-muted text-foreground rounded-md px-2.5 py-1.5 font-mono text-xs font-medium"
+                  : "text-muted-foreground hover:text-foreground rounded-md px-2.5 py-1.5 font-mono text-xs transition"
               }
             >
               {item}
@@ -80,7 +82,7 @@ export default function PartsBrowser() {
         </div>
       </div>
 
-      <div className="mt-3 text-[13px] text-[var(--blume-muted-foreground)]">
+      <div className="text-muted-foreground mt-3 text-[13px]">
         {visible.length} of {entries.length} parts
       </div>
 
@@ -91,15 +93,15 @@ export default function PartsBrowser() {
               type="button"
               onClick={() => copyName(entry)}
               title={`Click to copy "${entry.name}"`}
-              className="group relative w-full rounded-md border border-[var(--blume-border)] bg-[var(--humation-card)] p-3 text-left transition hover:border-[var(--blume-muted-foreground)]"
+              className="group border-border hover:border-muted-foreground relative w-full rounded-md border bg-(--humation-card) p-3 text-left transition"
             >
               {/* 絶対配置。名前の行に置くと幅を奪って長い名前が折り返す。 */}
               <span
                 aria-hidden="true"
                 className={
                   copied === entry.id
-                    ? "absolute top-2 right-2 text-[var(--blume-accent)]"
-                    : "absolute top-2 right-2 text-[var(--blume-muted-foreground)] opacity-0 transition-opacity duration-150 group-hover:opacity-100"
+                    ? "text-accent absolute top-2 right-2"
+                    : "text-muted-foreground absolute top-2 right-2 opacity-0 transition-opacity duration-150 group-hover:opacity-100"
                 }
               >
                 {copied === entry.id ? <CheckIcon /> : <CopyIcon />}
@@ -114,7 +116,7 @@ export default function PartsBrowser() {
                 className="mx-auto h-16 w-16 rounded-sm dark:bg-[#F6F5F4]"
               />
               {/* .prose の段落余白は not-prose の中まで効くので <p> は使わない。 */}
-              <div className="mt-2 font-mono text-[11px] leading-4 break-all text-[var(--blume-foreground)]">
+              <div className="text-foreground mt-2 font-mono text-[11px] leading-4 break-all">
                 {entry.name}
               </div>
             </button>
@@ -123,7 +125,7 @@ export default function PartsBrowser() {
       </ul>
 
       {visible.length === 0 ? (
-        <div className="mt-6 text-[14px] text-[var(--blume-muted-foreground)]">
+        <div className="text-muted-foreground mt-6 text-sm">
           No parts match “{query}”.
         </div>
       ) : null}

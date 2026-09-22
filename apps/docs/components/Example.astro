@@ -18,7 +18,7 @@ const { code, lang = "tsx", title } = Astro.props;
 >
   {/* not-prose はプレビュー側だけ。枠ごと囲うと中のコードブロックが
       .prose のヘッダー (ファイル名バー) を失う。 */}
-  <div class="not-prose bg-[var(--humation-card)] p-5"><slot /></div>
+  <div class="not-prose bg-(--humation-card) p-5"><slot /></div>
   <div class="border-border border-t">
     <CodeBlock code={code} lang={lang} title={title} />
   </div>

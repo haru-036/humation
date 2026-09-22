@@ -50,9 +50,9 @@ export default function SeedDemoClient({ codeInner, defaultSeed }: Props) {
   };
 
   return (
-    <div className="not-prose my-6 overflow-hidden rounded-xl border border-[var(--blume-border)] bg-[var(--blume-background)]">
+    <div className="not-prose border-border bg-background my-6 overflow-hidden rounded-xl border">
       <div className="flex flex-col gap-5 p-5 sm:flex-row sm:items-center">
-        <div className="grid size-28 shrink-0 place-items-center overflow-hidden rounded-lg bg-[var(--blume-muted)]">
+        <div className="bg-muted grid size-28 shrink-0 place-items-center overflow-hidden rounded-lg">
           <Avatar
             assets={humation1}
             seed={seed}
@@ -64,7 +64,7 @@ export default function SeedDemoClient({ codeInner, defaultSeed }: Props) {
         <div className="min-w-0 flex-1">
           <label
             htmlFor={inputId}
-            className="text-xs font-semibold tracking-wide text-muted-foreground"
+            className="text-muted-foreground text-xs font-semibold tracking-wide"
           >
             seed
           </label>
@@ -74,27 +74,27 @@ export default function SeedDemoClient({ codeInner, defaultSeed }: Props) {
               value={seed}
               onChange={(event) => setSeed(event.target.value)}
               spellCheck={false}
-              className="min-w-0 flex-1 rounded-lg border border-[var(--blume-border)] bg-[var(--blume-background)] px-3 py-2 font-mono text-sm text-[var(--blume-foreground)] outline-none transition-colors focus:border-[var(--blume-muted-foreground)]"
+              className="border-border bg-background text-foreground focus:border-muted-foreground min-w-0 flex-1 rounded-lg border px-3 py-2 font-mono text-sm transition-colors outline-none"
             />
             <button
               type="button"
               aria-label="Random seed"
               onClick={shuffle}
-              className="grid size-[38px] shrink-0 place-items-center rounded-lg border border-[var(--blume-border)] text-[var(--blume-muted-foreground)] transition-[color,transform] duration-150 ease-out hover:text-[var(--blume-foreground)] active:scale-[0.97]"
+              className="border-border text-muted-foreground hover:text-foreground grid size-9.5 shrink-0 place-items-center rounded-lg border transition-[color,transform] duration-150 ease-out active:scale-[0.97]"
             >
               <ShuffleIcon />
             </button>
           </div>
           {/* .prose の段落余白は not-prose の中まで効き、ユーティリティより強い。
               島の中では <p> を使わない。 */}
-          <div className="mt-2 text-[13px] leading-6 text-[var(--blume-muted-foreground)]">
+          <div className="text-muted-foreground mt-2 text-[13px] leading-6">
             The same seed always renders the same avatar for a given asset
             package version.
           </div>
         </div>
       </div>
 
-      <div className="relative border-t border-[var(--blume-border)] bg-[var(--blume-background)]">
+      <div className="border-border bg-background relative border-t">
         <div className="humation-code overflow-x-auto px-4 py-3 pr-16 font-mono text-sm leading-6 whitespace-nowrap">
           <code
             ref={codeRef}
@@ -104,14 +104,14 @@ export default function SeedDemoClient({ codeInner, defaultSeed }: Props) {
         </div>
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-[var(--blume-background)]"
+          className="bg-background pointer-events-none absolute inset-y-0 right-0 w-12"
         />
         <button
           type="button"
           aria-label={copied ? "Copied" : "Copy code"}
           title={copied ? "Copied" : "Copy code"}
           onClick={copyCode}
-          className="absolute top-1/2 right-1.5 grid size-9 -translate-y-1/2 place-items-center rounded-md bg-[var(--blume-background)] text-[var(--blume-muted-foreground)] transition-[color,transform] duration-150 ease-out hover:text-[var(--blume-foreground)] active:scale-[0.97]"
+          className="bg-background text-muted-foreground hover:text-foreground absolute top-1/2 right-1.5 grid size-9 -translate-y-1/2 place-items-center rounded-md transition-[color,transform] duration-150 ease-out active:scale-[0.97]"
         >
           {copied ? <CheckIcon /> : <CopyIcon />}
         </button>

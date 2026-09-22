@@ -22,10 +22,8 @@ export default function PickerDemoClient({ options, defaultId }: Props) {
       <div className="flex items-baseline justify-between gap-4">
         {/* .prose の段落余白は not-prose の中まで効き、ユーティリティより強い。
             島の中では <p> を使わない。 */}
-        <div className="text-[13px] font-medium text-[var(--blume-foreground)]">
-          Body
-        </div>
-        <div className="font-mono text-[12px] text-[var(--blume-muted-foreground)]">
+        <div className="text-foreground text-[13px] font-medium">Body</div>
+        <div className="text-muted-foreground font-mono text-xs">
           {selected?.name}
         </div>
       </div>
@@ -40,8 +38,8 @@ export default function PickerDemoClient({ options, defaultId }: Props) {
               onClick={() => setSelectedId(part.id)}
               className={
                 selectedId === part.id
-                  ? "grid h-16 w-16 place-items-center rounded-md bg-[var(--blume-muted)] ring-1 ring-[var(--blume-accent)] ring-inset transition-transform duration-150 active:scale-[0.97]"
-                  : "grid h-16 w-16 place-items-center rounded-md transition-[background-color,transform] duration-150 hover:bg-[var(--blume-muted)] active:scale-[0.97]"
+                  ? "bg-muted ring-accent grid h-16 w-16 place-items-center rounded-md ring-1 transition-transform duration-150 ring-inset active:scale-[0.97]"
+                  : "hover:bg-muted grid h-16 w-16 place-items-center rounded-md transition-[background-color,transform] duration-150 active:scale-[0.97]"
               }
             >
               <img
