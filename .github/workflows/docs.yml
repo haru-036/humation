@@ -1,6 +1,6 @@
 name: Docs
 
-# Checks that the documentation site still builds. Deployment is handled by
+# Checks the documentation site with the Blume CLI. Deployment is handled by
 # Cloudflare Workers Builds, not by this workflow.
 
 on:
@@ -38,4 +38,11 @@ jobs:
       - run: bun install --frozen-lockfile
       # The docs import the workspace packages, so build them first.
       - run: bun run build:packages
-      - run: bun run --cwd apps/docs build
+      - name: Type-check
+        run: bun run --cwd apps/docs check
+      - name: Diagnose config and content
+        run: bun run --cwd apps/docs doctor
+      - name: Validate links
+        run: bun run --cwd apps/docs validate
+      - name: Build
+        run: bun run --cwd apps/docs build
