@@ -1,0 +1,35 @@
+---
+title: LLM 向け
+description: Humation は小さなライブラリなので、コーディングエージェントは短い説明だけで正しく使えます。このページがその説明です。
+---
+## llms.txt
+
+パッケージ、クイックスタート、下記のルールを機械可読な形でまとめたものを [/llms.txt](/llms.txt) に置いています。コードサンプルを貼り付けるより、この URL をエージェントに渡してください。
+
+## 明示しておきたいルール [#rules-worth-stating-explicitly]
+
+エージェントが Humation をホスト型のアバターサービスだと思い込んだときに、特に間違えやすい点です。
+
+```text
+Use @humation/react for React UI.
+Use @humation/assets-humation-1 for the asset set. It is always required.
+Do not call a Humation API or any remote URL for rendering.
+Use seed for deterministic generated avatars.
+Use selections and colors for user-customized avatars.
+Use @humation/core only when raw SVG output or picker previews are needed.
+Part names are scoped to a slot: { head: 'braids' }, not { part: 'braids' }.
+Empty slots are the part named 'none', not undefined.
+```
+
+## 最小限の正しい例 [#minimal-correct-example]
+
+エージェントの出力がこれだけでも、もう正しく動きます。それ以外はすべて微調整です。
+
+```tsx
+import { Avatar } from '@humation/react';
+import { humation1 } from '@humation/assets-humation-1';
+
+<Avatar assets={humation1} seed={user.id} size={96} title={user.name} />;
+```
+
+使えるオプションは[オプション](/options)に、パーツ名は[パーツ](/parts)にすべて載っています。どちらもプロンプトに丸ごと貼れる短さです。保存するデータには `hm1-p-000020` のような正規 ID を使うよう、エージェントに念押ししてください。

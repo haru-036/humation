@@ -1,0 +1,25 @@
+---
+title: パーツ
+description: Humation 1 アセットパッケージのすべてのパーツです。パーツをクリックすると、選択に使う名前をコピーできます。
+---
+## 一覧 [#browse]
+
+<PartsBrowser />
+
+## CLI でパーツ名を一覧表示する [#listing-part-names-from-the-cli]
+
+選択、ドキュメント、テスト、プロンプトで使う名前を調べるときに使います。
+
+```sh
+node -e "import('@humation/assets-humation-1').then(({ humation1 }) => console.log(humation1.parts.map((p) => p.name)))"
+```
+
+## 名前の使い方 [#using-a-name]
+
+名前が一意なのはスロットの中だけなので、その名前が属するスロットと組み合わせて渡します。上のパーツをクリックすると名前をコピーできます。
+
+`selections={{ head: 'braids' }}`
+
+## 空のスロット [#empty-slots]
+
+`item` と `glasses` には、それぞれ `none` という名前のパーツがあります。スロットを空にしたいときはこれを選びます。スロットの指定を外す方法はほかにありません。

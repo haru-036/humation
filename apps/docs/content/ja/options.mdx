@@ -1,0 +1,79 @@
+---
+title: オプション
+description: React コンポーネントと createAvatar に渡せるすべての値と、それを支えるヘルパーと型の一覧です。
+---
+## `<Avatar>`
+
+`@humation/react` — `<svg>` 要素を描画する forwardRef コンポーネントです。
+
+<AvatarOptionsReference />
+
+## createAvatar
+
+`@humation/core`
+
+```ts
+createAvatar(manifest: HumationManifest, options?: CreateAvatarOptions)
+```
+
+<CreateAvatarOptionsReference />
+
+返されるオブジェクトには、4 種類の変換メソッドがあります。
+
+## ヘルパー [#helpers]
+
+`@humation/core`
+
+<HelpersReference />
+
+## マニフェストの型 [#manifest-types]
+
+マニフェストはただのデータなので、スロット名や色の一覧をハードコードせずに、直接読み取れます。
+
+```ts
+type HumationManifest = {
+  schemaVersion: '1.0';
+  template: { id: string; shortId: string; name: string; version: string; license: string };
+  defaults: {
+    selections: Record<SelectionSlotId, PartOptionId>;
+    colors: Record<ColorSlotId, HexColor>;
+    background: HexColor | 'transparent';
+    crop: CropId;
+  };
+  colors: ColorSlot[];
+  crops: Record<CropId, ViewBox>;
+  selectionSlots: SelectionSlot[];
+  uiGroups: UiGroup[];
+  layerSlots: LayerSlot[];
+  parts: PartOption[];
+  aliases: AliasEntry[];
+};
+
+type PartOption = {
+  id: PartOptionId;
+  name?: string;
+  aliases?: string[];
+  selectionSlot: SelectionSlotId;
+  uiGroups: UiGroupId[];
+  layers: LayerFragment[];
+  tags?: string[];
+  deprecated?: boolean;
+};
+
+type ColorSlot = {
+  id: ColorSlotId;
+  label: string;
+  default: HexColor;
+  cssVariable: `--hm-${string}`;
+  allowTransparent?: boolean;
+};
+
+type AliasEntry = {
+  alias: string;
+  targetId: PartOptionId;
+  status: 'active' | 'deprecated';
+  replacementAlias?: string;
+};
+```
+
+`aliases` があるおかげで、以前に保存した値も引き続き使えます。非推奨のエントリには、後継を指す `replacementAlias` が入っています。詳しくは[状態の保存](/state)を参照してください。
