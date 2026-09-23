@@ -1,0 +1,39 @@
+---
+title: カスタマイズ
+description: パーツの選択がどう解決されるか、どの色を変えられるか、マニフェストをもとにピッカー UI を作る方法を説明します。
+---
+## 選択 [#selections]
+
+選択スロットは `head`、`body`、`bottom`、`item`、`glasses` の 5 つで、それぞれにパーツを 1 つずつ指定します。値の書き方は 3 通りあり、どれも同じパーツに解決されます。
+
+```ts
+{
+  head: 'braids';
+} // name, scoped to the slot
+{
+  head: 'head-braids';
+} // global alias
+{
+  head: 'hm1-p-000020';
+} // canonical part ID
+```
+
+名前はコードでもプロンプトでも読みやすいのが利点です。保存するデータには、変わることのない正規 ID を使います（[状態の保存](/state)を参照）。名前の一覧は[パーツ](/parts)にあります。
+
+`item` と `glasses` には、どちらも `none` という名前のパーツがあります。アバターに何も付けないときはこれを選びます。
+
+## 色 [#colors]
+
+色を変えられるスロットは 6 つです。どのスロットも参照していない部分は色が固定されているので、アクセサリーは独自の配色を保ち、輪郭線だけが `stroke` の色に連動します。
+
+<ColorSlotsReference />
+
+`background` には `'transparent'` も指定できます。16 進数の色は、先頭の `#` があってもなくても受け付けます。
+
+## マニフェストからピッカーを作る [#build-a-picker-from-the-manifest]
+
+マニフェストには UI グループごとのパーツがすでに並んでいて、それぞれのプレビューも描画できます。このデータを map するだけでピッカーが作れるので、パーツ一覧やサムネイルを別に管理する必要はありません。
+
+<PickerGuideExample />
+
+複数のグループに対応した完成形は、<a href="https://humation.app/avatar" target="_blank" rel="noopener noreferrer">アバタービルダー</a>で確認できます。

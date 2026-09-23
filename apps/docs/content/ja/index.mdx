@@ -1,0 +1,51 @@
+---
+title: はじめに
+description: 同じシードなら必ず同じ見た目になる、かわいいアバターをアプリに追加できます。API 呼び出しは不要です。
+sidebar:
+  label: はじめに
+---
+<div className="humation-hero">
+  ![フィード、チャットリスト、アカウント画面で使われている Humation のアバター](../images/humation-hero.png)
+</div>
+
+## 同じシードなら、同じアバター [#same-seed-same-avatar]
+
+同じシードを渡せば、何度でも同じアバターになります。ユーザー ID、メールアドレス、ユーザー名など、手元にある変わらない値ならなんでも使えます。
+
+<SeedDemo />
+
+## API 呼び出しは不要 [#no-api-to-call]
+
+描画はすべてアプリの中で完結します。アセットパッケージに SVG 文字列が埋め込まれているので、外部（Humation のサーバーも含む）には一切通信しません。オフラインでも、Node でも、Cloudflare Worker でも、テストの中でも、出力は同じです。
+
+画像生成は使っていません。イラストは人の手で描いたもので、シードが決めるのはどのパーツを組み合わせるかだけです。
+
+## インストール [#install]
+
+React アプリでは、コンポーネントとアセットパッケージを一緒にインストールします。React 以外の環境では、`@humation/react` の代わりに `@humation/core` をインストールします（[コア](/core)を参照）。
+
+<HumationInstall
+  packages={["@humation/react", "@humation/assets-humation-1"]}
+/>
+
+<CardGroup cols={3}>
+  <Card title="@humation/react" href="/react" icon="atom">
+    **React コンポーネント**
+
+    React でアバターを描画するときに使います。中身は core のラッパーです。
+  </Card>
+  <Card title="@humation/core" href="/core" icon="box">
+    **レンダラーとヘルパー**
+
+    SVG をそのまま出力したいときや、ピッカー UI を作るときに使います。
+  </Card>
+  <Card title="@humation/assets-humation-1" href="/parts" icon="palette">
+    **アセット**
+
+    どちらの場合も必要です。イラスト本体が入っています。
+  </Card>
+</CardGroup>
+
+## ライセンス [#license]
+
+パッケージもイラストも MIT ライセンスです。ライセンス本文は[リポジトリ](https://github.com/humation-labs/humation)にあります。

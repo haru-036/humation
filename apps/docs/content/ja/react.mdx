@@ -1,0 +1,41 @@
+---
+title: React
+description: "Avatar コンポーネントは <svg> 要素を直接描画します。プロダクトの UI に組み込むいちばんの近道です。"
+---
+## シードから描画する [#render-from-a-seed]
+
+ユーザー ID、メールアドレス、ユーザー名など、変わらない文字列ならなんでも渡せます。アセットパッケージのバージョンが同じなら、同じシードからは毎回同じパーツが選ばれます。
+
+<ReactSeedExample />
+
+## 選択を指定して描画する [#render-from-explicit-selections]
+
+ユーザーが自分でアバターを選ぶ場合は、シードの代わりに `selections` と `colors` を渡します。パーツ名、エイリアス、正規 ID のどれでも指定できます。
+
+<ReactSelectionExample />
+
+名前の一覧は[パーツ](/parts)にあります。シードと選択は組み合わせても大丈夫です。シードがすべてのスロットを埋め、明示した選択がそのスロットだけを上書きします。
+
+## 色は CSS カスタムプロパティ [#colors-are-css-custom-properties]
+
+`colors` プロパティは `<svg>` 要素に CSS カスタムプロパティとして適用されるので、色を変えてもアバターの中身は再レンダリングされません。指定しなかったスロットはアセットに組み込まれたデフォルト色のままで、自分の CSS からテーマとして上書きできます。
+
+```css
+.avatar-on-dark {
+  --hm-stroke: #ffffff;
+  --hm-background: transparent;
+}
+```
+
+## アクセシビリティ [#accessibility]
+
+アバターで人物を識別する場合は `title` を渡します。渡さなければアバターは装飾として扱われ、スクリーンリーダーには読み上げられません。名前がすぐ隣に表示されている場面では、これが適切なデフォルトです。
+
+```tsx
+<Avatar assets={humation1} seed={user.id} title={user.name} />
+
+<span aria-hidden="true"><Avatar assets={humation1} seed={user.id} /></span>
+<span>{user.name}</span>
+```
+
+残りの SVG プロパティはすべてルート要素に渡されるので、`className`、`style`、`onClick`、`ref` は普段どおりに使えます。一覧は[オプション](/options)にあります。

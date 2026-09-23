@@ -1,0 +1,39 @@
+---
+title: コア
+description: "@humation/core は React を使わずにアバターを SVG に描画します。Node、Cloudflare Workers、書き出し処理、テスト、独自のフレームワークで使えます。"
+---
+<HumationInstall
+  packages={["@humation/core", "@humation/assets-humation-1"]}
+/>
+
+## createAvatar
+
+`createAvatar` は、マニフェストと、React コンポーネントと同じオプションを受け取り、必要な形式に変換できるオブジェクトを返します。
+
+```ts
+import { createAvatar } from '@humation/core';
+import { humation1 } from '@humation/assets-humation-1';
+
+const avatar = createAvatar(humation1, {
+  seed: 'felix',
+  colors: { hair: '#123456', skin: '#FFEECC' }
+});
+
+avatar.toString(); // '<svg ...>...</svg>'
+avatar.toDataUri(); // 'data:image/svg+xml;charset=utf-8,...'
+avatar.toJSON(); // resolved selections, colors, background, crop
+```
+
+シードから作ったアバターが、実際にどのパーツと色に決まったのかを保存したいときは `toJSON()` を使います。詳しくは[状態の保存](/state)を参照してください。
+
+## 独自のコンポーネントで core をラップする [#wrapping-core-in-your-own-component]
+
+フレームワーク向けのラッパーを作る場合は、`toRenderData()` を使います。ルートの `<svg>` 要素、背景の rect、インラインの色スタイルを除いた、合成済みのフラグメントが取得できます。色は `var(--hm-*, fallback)` の参照のまま残るので、ラッパー側では中身を再レンダリングせずに、CSS カスタムプロパティで色を切り替えられます。
+
+```ts
+const { viewBox, background, colors, content } = createAvatar(humation1, {
+  seed: 'felix'
+}).toRenderData();
+```
+
+`@humation/react` も内部でまさにこれをやっています。

@@ -1,0 +1,30 @@
+---
+title: 状態の保存
+description: ユーザーがアバターを編集したときに保存しておくもの。
+---
+## 保存するデータの形 [#the-shape-to-store]
+
+ユーザーがアバターを編集した場合は、指定された選択と色を保存します。ユーザーの識別情報からアバターを作り直せる場合は、シードを保存します。
+
+```ts
+type HumationAvatarState = {
+  seed?: string;
+  selections?: {
+    head?: string;
+    body?: string;
+    bottom?: string;
+    item?: string;
+    glasses?: string;
+  };
+  colors?: {
+    hair?: string;
+    clothes?: string;
+    bottom?: string;
+    skin?: string;
+    stroke?: string;
+    background?: string;
+  };
+};
+```
+
+長く保存するデータには、`hm1-p-000020` のような正規 ID がいちばん安定しています。`braids` のような人が読みやすい名前は、コードやプロンプトで使うのに便利です。

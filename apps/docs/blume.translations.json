@@ -1,0 +1,29 @@
+{
+  "files": {
+    "content/core.mdx": {
+      "ja": "75071b1707ed4683"
+    },
+    "content/customizing.mdx": {
+      "ja": "edb8053d2ac72d75"
+    },
+    "content/index.mdx": {
+      "ja": "37b25ffe1c960862"
+    },
+    "content/llms.mdx": {
+      "ja": "4610d477a3484cc2"
+    },
+    "content/options.mdx": {
+      "ja": "3dd67d35ceac7576"
+    },
+    "content/parts.mdx": {
+      "ja": "809ec9f2d455e904"
+    },
+    "content/react.mdx": {
+      "ja": "adff49db1137ac6c"
+    },
+    "content/state.mdx": {
+      "ja": "e39aaf049707aefc"
+    }
+  },
+  "version": 1
+}
