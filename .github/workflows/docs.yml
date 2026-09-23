@@ -44,5 +44,9 @@ jobs:
         run: bun run --cwd apps/docs doctor
       - name: Validate links
         run: bun run --cwd apps/docs validate
+      # Fails when an English page changed after its translation was recorded
+      # in blume.translations.json. Rerun `blume translate` and commit the result.
+      - name: Check translations are up to date
+        run: bun run --cwd apps/docs translate:check
       - name: Build
         run: bun run --cwd apps/docs build

@@ -8,6 +8,7 @@
     "check": "blume check",
     "doctor": "blume doctor",
     "validate": "blume validate",
+    "translate:check": "blume translate --check",
     "deploy": "wrangler deploy"
   },
   "dependencies": {
