@@ -7,7 +7,8 @@
     "build": "blume build",
     "check": "blume check",
     "doctor": "blume doctor",
-    "validate": "blume validate"
+    "validate": "blume validate",
+    "deploy": "wrangler deploy"
   },
   "dependencies": {
     "@humation/assets-humation-1": "workspace:*",
@@ -16,5 +17,8 @@
     "blume": "^1.7.1",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.136.3"
   }
 }
