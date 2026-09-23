@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "blume dev",
     "build": "blume build",
+    "check": "blume check",
     "doctor": "blume doctor",
+    "validate": "blume validate",
     "deploy": "wrangler deploy"
   },
   "dependencies": {
