@@ -1,0 +1,16 @@
+{
+  "name": "humation-docs",
+  "account_id": "2bde4c78cf8549b660bce308f8bd5a2a",
+  "compatibility_date": "2025-09-27",
+  "assets": {
+    "directory": "./dist",
+    "html_handling": "drop-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "routes": [
+    {
+      "pattern": "docs.humation.app",
+      "custom_domain": true
+    }
+  ]
+}
