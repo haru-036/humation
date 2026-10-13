@@ -5,7 +5,7 @@ description: What to persist when a user edits their avatar.
 
 ## The shape to store
 
-Save explicit selections and colors when the user edits an avatar. Save a seed when the avatar can be regenerated from user identity.
+Save explicit selections and colors when the user edits an avatar. Save a seed when the avatar can be regenerated from user identity. `background` sits next to `colors`, as it does in the component props.
 
 ```ts
 type HumationAvatarState = {
@@ -23,9 +23,9 @@ type HumationAvatarState = {
     bottom?: string;
     skin?: string;
     stroke?: string;
-    background?: string;
   };
+  background?: string;
 };
 ```
 
-For long-lived saved data, canonical IDs such as `hm1-p-000020` are the most stable. Human-readable names such as `braids` are convenient for code and prompts.
+For long-lived saved data, canonical IDs such as `hm1-p-000020` are the most stable. Human-readable names such as `braids` are convenient for code and prompts, but [Swift](/swift) accepts canonical IDs only. Store IDs if the data is shared with an iOS or macOS app.

@@ -1,0 +1,157 @@
+---
+title: Swift
+description: "iOS、macOS、tvOS、visionOS 向けのネイティブ Swift パッケージです。Web 版のパッケージと同じアバターを Core Graphics で描画します。"
+---
+[humation-swift](https://github.com/humation-labs/humation-swift) は、エンジンを Swift に移植した別パッケージです。シードからパーツを選ぶハッシュは `@humation/core` と同じなので、同じシードからは Web でもネイティブアプリでも同じアバターになります。
+
+描画には Core Graphics だけを使います。`WKWebView` もネットワーク通信も使いません。Humation 1 のアセットパッケージは同梱されているので、ほかにインストールするものはありません。
+
+## インストール [#install]
+
+Xcode で **File › Add Package Dependencies…** を選び、次の URL を入力して、**Humation** ライブラリをアプリのターゲットに追加します。
+
+```text
+https://github.com/humation-labs/humation-swift.git
+```
+
+`Package.swift` を使う場合は、パッケージとプロダクトをターゲットに追加します。
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/humation-labs/humation-swift.git", from: "1.3.0"),
+],
+targets: [
+    .target(name: "App", dependencies: [
+        .product(name: "Humation", package: "humation-swift"),
+    ]),
+]
+```
+
+iOS 15、macOS 12、tvOS 15、visionOS 1 以降と Swift 6 が必要です。アバターエディタは `HumationEditor` という別プロダクトなので、使うときだけ追加します。
+
+humation-swift のバージョンは npm パッケージとは別に管理されています。1.3.0 には `@humation/assets-humation-1` 1.0.3 のアセットが同梱されています。
+
+## シードから描画する [#render-from-a-seed]
+
+シードには、ユーザー ID やユーザー名など、すでに持っている変わらない文字列ならなんでも使えます。Web と同じアバターにするには、まったく同じ文字列を渡してください。`"ABC"` と `"abc"` は別のシードなので、UUID を片方では大文字、もう片方では小文字で保存している場合は注意が必要です。
+
+SwiftUI では、シードとポイント単位のサイズを渡します。ビューは画面のスケールに合わせたビットマップをメインスレッドの外で描画し、キャッシュします。
+
+```swift
+import Humation
+
+HumationAvatarView(seed: user.id, size: 96)
+```
+
+SwiftUI 以外では、画像を取得します。`pixels` は出力画像の幅と高さなので、ポイント単位のサイズに画面のスケールを掛けた値を渡します（@3x で 96 pt なら 288 ピクセル）。戻り値はオプショナルで、`nil` になるのは同梱のアセットを読み込めなかったときだけです。
+
+```swift
+// iOS、tvOS、visionOS では UIImage
+if let image = Humation.image(seed: user.id, pixels: 288) {
+    imageView.image = image
+}
+
+// macOS では NSImage、どのプラットフォームでも CGImage
+let ns = Humation.nsImage(seed: user.id, pixels: 288)
+let cg = Humation.cgImage(seed: user.id, pixels: 288)
+```
+
+同梱のアセットは最初に使うときにデコードされます。起動時に `Humation.prewarm()` を一度呼ぶと、最初の描画中ではなくバックグラウンドスレッドでデコードされます。
+
+## 保存したプロファイルから描画する [#render-a-saved-profile]
+
+`HumationProfile` は、スロットごとに選んだパーツと色の上書きを持ちます。スロットは Web と同じです（[カスタマイズ](/customizing)を参照）。`Codable` なので、JSON として保存してあとから描画できます。
+
+```swift
+let profile = HumationProfile(
+    selections: [.head: "hm1-p-000020"],
+    colors: [.hair: "5B3A1E"]
+)
+
+HumationAvatarView(profile: profile, seed: user.id, size: 96)
+```
+
+プロファイルで指定しなかったスロットは、`seed` から、次にアセットのデフォルトから埋められます。
+
+選択には正規 ID だけを指定できます。Web 版のパッケージが受け付ける `braids` のようなパーツ名や `head-braids` のようなエイリアスは、Swift では解決されません。[パーツ](/parts)で調べた名前から、次のように ID を引いてください。`item` や `glasses` を空にするときも、同じ方法で `none` という名前のパーツを選びます。
+
+```swift
+let braids = Humation.manifest?
+    .parts(in: .head)
+    .first { $0.name == "braids" }?
+    .id   // "hm1-p-000020"
+```
+
+プロファイルは描画時に修復されます。存在しなくなったパーツ ID や、別のスロットに属するパーツ ID は無視され、そのスロットはシードかデフォルトに戻ります。`@humation/core` は、同じ入力に対してエラーを投げます。
+
+## Web とプロファイルを共有する [#share-profiles-with-the-web]
+
+`HumationProfile` は `selections` と `colors` を持つ JSON にエンコードされます。Web 版のパッケージが受け取る形とは、背景色の 1 か所だけが違います。
+
+- Swift は背景色を `colors.background` に保存します。
+- `@humation/core` と `@humation/react` は背景色を独立した `background` オプションで受け取り、`toJSON()` もトップレベルの `background` として返します。`colors` の中の `background` は無視されます。
+
+変換するときは、背景色を移し替えてください。
+
+```ts
+// Web → Swift
+const { selections, colors, background } = createAvatar(humation1, { seed }).toJSON();
+const profile = { selections, colors: { ...colors, background } };
+
+// Swift → Web
+const { background: bg, ...rest } = profile.colors;
+<Avatar assets={humation1} selections={profile.selections} colors={rest} background={bg} />;
+```
+
+両方で同じアバターにするには、ほかに次の点にも注意してください。
+
+- 正規 ID を保存します。`toJSON()` は正規 ID を返します。
+- Swift は色を `#` なしの大文字で書き出します。Web 版のパッケージはどちらの形式も受け付けます。
+- アセットのバージョンを揃えます。シードはパーツの一覧から選ぶので、パーツが追加されたバージョンでは選ばれるパーツが変わることがあります。
+
+## 組み込みのエディタを使う [#use-the-built-in-editor]
+
+`HumationEditorView` は、パーツのグリッド、色のスウォッチ、ランダムボタンを備えた、すぐに使えるアバター作成 UI です。自分のビューの中でプロファイルにバインドして使います。
+
+```swift
+import Humation
+import HumationEditor
+
+struct AvatarEditorScreen: View {
+    @State private var profile = HumationProfile()
+    let userID: String
+
+    var body: some View {
+        HumationEditorView(profile: $profile, seed: userID)
+    }
+}
+```
+
+`seed` は、エディタを開いたときにプロファイルで指定されていないスロットを埋めます。一度編集すると、プロファイルにはすべてのスロットと色が明示的に入るので、それ以降はシードに追従しません。
+
+`HumationEditorConfiguration` では、タブ、スロットごとのカラーパレット、アクセントカラー、セルの背景、角丸の半径、フォント、背景色を選べるようにするかを設定できます。
+
+```swift
+HumationEditorView(profile: $profile, configuration: .init(accent: .pink))
+```
+
+## カスタムのマニフェストを使う [#use-a-custom-manifest]
+
+自分で作ったマニフェストを読み込み、ここまでのすべての API のデフォルトにできます。`setDefaultManifest` は、起動時にアバターを描画する前に一度だけ呼んでください。それより前に解決されたアバターは、すでに決まったパーツ ID のままです。
+
+```swift
+let manifest = try Humation.manifest(contentsOf: url)
+let issues = HumationValidator.validate(manifest)
+guard issues.isEmpty else {
+    print(issues)
+    return
+}
+
+Humation.setDefaultManifest(manifest)   // nil を渡すと同梱のアセットに戻る
+```
+
+Swift のレンダラーは SVG の一部にしか対応しておらず、`HumationValidator` はそのすべてを検査するわけではありません。報告されるのは、未知のスロットと円弧のコマンド（`A`）だけです。次の制限も踏まえたうえで、描画結果を目で確認してください。
+
+- すべてのレイヤーは SVG を `svg` にインラインで持つ必要があります。`svgPath` しかないレイヤーは読み込まれません。
+- パスコマンドは `M`、`L`、`H`、`V`、`C`、`S`、`Q`、`T`、`Z` に対応しています。円弧（`A`）には対応していません。
+- 描画されるのは `path`、`circle`、`ellipse`、`rect`、`line`、`polygon`、`polyline` だけです。グラデーションやテキストなどは、エラーにならずに読み飛ばされます。
