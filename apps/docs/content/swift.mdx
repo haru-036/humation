@@ -1,42 +1,23 @@
 ---
 title: Swift
-description: "A native Swift package for iOS, macOS, tvOS, and visionOS. It renders the same avatars as the web packages with Core Graphics."
+description: "For iOS, macOS, tvOS, and visionOS apps, use humation-swift. It renders the same avatars as the web packages with Core Graphics."
 ---
 
-[humation-swift](https://github.com/humation-labs/humation-swift) is a separate package that ports the engine to Swift. A seed picks parts with the same hash as `@humation/core`, so the same seed gives the same avatar on the web and in a native app.
+For Swift apps, use [humation-swift](https://github.com/humation-labs/humation-swift). It is a native port of the engine. A seed picks parts with the same hash as `@humation/core`, so the same seed gives the same avatar on the web and in a native app.
 
-Rendering uses Core Graphics only. There is no `WKWebView` and no network access. The Humation 1 asset package is bundled, so there is nothing else to install.
+It renders with Core Graphics, without a `WKWebView` or network access, and bundles the Humation 1 asset package.
 
 ## Install
 
-In Xcode, choose **File › Add Package Dependencies…**, enter the URL below, and add the **Humation** library to your app target.
-
-```text
-https://github.com/humation-labs/humation-swift.git
-```
-
-In a `Package.swift`, add the package and the product to your target.
+Add the package with Swift Package Manager, then add the `Humation` product to your target.
 
 ```swift
-dependencies: [
-    .package(url: "https://github.com/humation-labs/humation-swift.git", from: "1.3.0"),
-],
-targets: [
-    .target(name: "App", dependencies: [
-        .product(name: "Humation", package: "humation-swift"),
-    ]),
-]
+.package(url: "https://github.com/humation-labs/humation-swift.git", from: "1.3.0")
 ```
 
-It requires iOS 15, macOS 12, tvOS 15, or visionOS 1, and Swift 6. The avatar editor is a separate product, `HumationEditor`. Add it only if you use it.
-
-humation-swift is versioned separately from the npm packages. Version 1.3.0 bundles the assets from `@humation/assets-humation-1` 1.0.3.
+humation-swift is versioned separately from the npm packages.
 
 ## Render from a seed
-
-A seed is any stable string you already have, such as a user ID or a username. To get the same avatar as the web, pass exactly the same string. `"ABC"` and `"abc"` are different seeds, so watch for UUIDs that one side stores in uppercase and the other in lowercase.
-
-In SwiftUI, pass a seed and a size in points. The view renders a bitmap for the screen scale off the main thread and caches it.
 
 ```swift
 import Humation
@@ -44,115 +25,12 @@ import Humation
 HumationAvatarView(seed: user.id, size: 96)
 ```
 
-Outside SwiftUI, ask for an image. `pixels` is the width and height of the output, so multiply the point size by the screen scale (96 pt at @3x is 288 pixels). The result is optional and is `nil` only if the bundled assets cannot be loaded.
+Image output, saved profiles, the built-in editor, and custom manifests are covered in the [humation-swift README](https://github.com/humation-labs/humation-swift#readme).
 
-```swift
-// UIImage on iOS, tvOS, and visionOS
-if let image = Humation.image(seed: user.id, pixels: 288) {
-    imageView.image = image
-}
+## Share avatars with the web
 
-// NSImage on macOS, CGImage on every platform
-let ns = Humation.nsImage(seed: user.id, pixels: 288)
-let cg = Humation.cgImage(seed: user.id, pixels: 288)
-```
+Swift stores a user's avatar as `HumationProfile`, which encodes to JSON with `selections` and `colors`. It differs from the web packages in a few places, so check these when the same data is used on both sides.
 
-The bundled assets are decoded on first use. Call `Humation.prewarm()` once at launch to do that on a background thread instead of during the first render.
-
-## Render a saved profile
-
-`HumationProfile` holds the part chosen for each slot and the color overrides. The slots are the same as on the web; see [Customizing](/customizing). It is `Codable`, so you can store it as JSON and render it later.
-
-```swift
-let profile = HumationProfile(
-    selections: [.head: "hm1-p-000020"],
-    colors: [.hair: "5B3A1E"]
-)
-
-HumationAvatarView(profile: profile, seed: user.id, size: 96)
-```
-
-Slots the profile leaves out are filled from `seed`, then from the defaults in the assets.
-
-Selections take canonical IDs only. Part names such as `braids` and aliases such as `head-braids`, which the web packages accept, are not resolved in Swift. Look up the ID from a name on [Parts](/parts) like this. To leave `item` or `glasses` empty, select the part named `none` the same way.
-
-```swift
-let braids = Humation.manifest?
-    .parts(in: .head)
-    .first { $0.name == "braids" }?
-    .id   // "hm1-p-000020"
-```
-
-Profiles are healed when they are rendered. A part ID that no longer exists, or that belongs to a different slot, is ignored and the slot falls back to the seed or the default. `@humation/core` throws an error for the same input instead.
-
-## Share profiles with the web
-
-`HumationProfile` encodes to JSON with `selections` and `colors`. It differs from what the web packages take in one place: the background color.
-
-- Swift stores the background as `colors.background`.
-- `@humation/core` and `@humation/react` take it as the separate `background` option, and `toJSON()` returns it as a top-level `background` field. A `background` key inside `colors` is ignored.
-
-Move the background between the two when you convert.
-
-```ts
-// Web → Swift
-const { selections, colors, background } = createAvatar(humation1, { seed }).toJSON();
-const profile = { selections, colors: { ...colors, background } };
-
-// Swift → web
-const { background: bg, ...rest } = profile.colors;
-<Avatar assets={humation1} selections={profile.selections} colors={rest} background={bg} />;
-```
-
-To get the same avatar on both sides, also keep these points in mind.
-
-- Store canonical IDs. `toJSON()` already returns them.
-- Swift writes colors in uppercase without `#`. The web packages accept both forms.
-- Use the same version of the assets. A seed picks from the list of parts, so a version that adds parts can pick differently.
-
-## Use the built-in editor
-
-`HumationEditorView` is a ready-made avatar builder with a parts grid, color swatches, and a randomize button. Bind it to a profile in your own view.
-
-```swift
-import Humation
-import HumationEditor
-
-struct AvatarEditorScreen: View {
-    @State private var profile = HumationProfile()
-    let userID: String
-
-    var body: some View {
-        HumationEditorView(profile: $profile, seed: userID)
-    }
-}
-```
-
-`seed` fills the slots the profile leaves out when the editor opens. After the first edit, the profile holds an explicit part for every slot and every color, so it no longer follows the seed.
-
-`HumationEditorConfiguration` sets the tabs, the color palette for each slot, the accent color, the cell background, the corner radius, the font, and whether background colors are offered.
-
-```swift
-HumationEditorView(profile: $profile, configuration: .init(accent: .pink))
-```
-
-## Use a custom manifest
-
-You can load a manifest you authored yourself and make it the default for every API above. Call `setDefaultManifest` once at launch, before any avatar is rendered. Avatars resolved earlier keep the part IDs they already have.
-
-```swift
-let manifest = try Humation.manifest(contentsOf: url)
-let issues = HumationValidator.validate(manifest)
-guard issues.isEmpty else {
-    print(issues)
-    return
-}
-
-Humation.setDefaultManifest(manifest)   // pass nil to restore the bundled assets
-```
-
-The Swift renderer supports only a subset of SVG, and `HumationValidator` does not check all of it. It reports unknown slots and arc commands (`A`). Keep these limits in mind as well, and check the result visually.
-
-- Every layer must embed its SVG inline in `svg`. Layers that only have `svgPath` are not loaded.
-- Path commands `M`, `L`, `H`, `V`, `C`, `S`, `Q`, `T`, and `Z` are supported. Arcs (`A`) are not.
-- Only `path`, `circle`, `ellipse`, `rect`, `line`, `polygon`, and `polyline` are drawn. Gradients, text, and other elements are skipped without an error.
+- Swift accepts canonical IDs such as `hm1-p-000020` only. Part names and aliases such as `braids` are not resolved. `toJSON()` in `@humation/core` returns canonical IDs, and `resolvePartId` converts a name to its ID.
+- Swift stores the background color as `colors.background`. The web packages take it as the separate `background` option and ignore `background` inside `colors`.
+- A seed picks from the list of parts, so use the same version of the assets on both sides. humation-swift 1.3.0 bundles `@humation/assets-humation-1` 1.0.3.
